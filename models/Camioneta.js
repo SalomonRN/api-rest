@@ -6,9 +6,11 @@ var now = today.toLocaleString();*/
 var CamionetaSchema = new Schema({
     name: String,
     brand: String,
-    year: Number,
+    year: String,
     description:String,
+    price:Number,
     status:String,
+    image:String,
     updatedAt:String,
     rented:String,
     timerented:String,

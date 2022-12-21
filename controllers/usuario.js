@@ -3,38 +3,25 @@
  */
 var validator = require("validator");
 var Usuario = require("../models/Usuarios");
-var fecha = new Date();
 
 var controller = {
-    probando: function(req,res){
-        return res.status(200).send({
-            message:"Estoy en el metodo probando"
-        });
-    },
 
-    testeando: function(req,res){
-        return res.status(200).send({
-            message:"Estoy en el metodo testeando"
-        });
-    },
 
     save:function(req,res){
         var params = req.body;
-        var validate_name = !validator.isEmpty(params.nombre);
+        var validate_name = !validator.isEmpty(params.name);
         var validate_surname = !validator.isEmpty(params.surname);
         var validate_email = !validator.isEmpty(params.email) && validator.isEmail(params.email) ;
-        var validate_password = !validator.isEmpty(params.pass);
+        var validate_password = !validator.isEmpty(params.password);
         console.log(validate_email);
         if(validate_name && validate_surname && validate_email && validate_password){
             var usuario = new Usuario();
-            usuario.name = params.nombre;
+            usuario.name = params.name;
             usuario.surname = params.surname;
             usuario.email = params.email;
-            usuario.password = params.pass;
+            usuario.password = params.password;
             usuario.image = null;
-            usuario.role = "Rol de Usuario";
-            usuario.created = fecha.toLocaleDateString();
-            usuario.timecreated = fecha.toLocaleTimeString();     
+            usuario.role = "Rol de Usuario";  
             console.log(usuario);
             usuario.save((err, userStored) =>{
                 if(err || !userStored){
@@ -56,36 +43,29 @@ var controller = {
         
     },
 
-    login:function(req,res){
-        return res.status(200).send({
-            message:"Login"
-        });
-    },
+
 
     update:function(req,res){
         var params = req.body;
         var usuarioId = req.params.id;
-        console.log(usuarioId);
-        var validate_name = !validator.isEmpty(params.nombre);
+        var validate_name = !validator.isEmpty(params.name);
         var validate_surname = !validator.isEmpty(params.surname);
         var validate_email = !validator.isEmpty(params.email) && validator.isEmail(params.email) ;
-        var validate_password = !validator.isEmpty(params.pass);
+        var validate_password = !validator.isEmpty(params.password);
         if(validate_name && validate_surname && validate_email && validate_password){
             const date = new Date();
             console.log(date.toLocaleString());
         
             
             var update = {
-                name:params.nombre,
+                name:params.name,
                 surname:params.surname,
                 email:params.email,
-                password:params.pass,
-                updated:fecha.toLocaleDateString(),
-                timeupdated:fecha.toLocaleTimeString()               
+                password:params.password            
                 
             }
 
-            Usuario.findOneAndUpdate({usuarioId},update,{new:true},(err, userUpdate)=>{
+            Usuario.findByIdAndUpdate({_id:usuarioId},update,{rawResult:true},(err, userUpdate)=>{
                 if(err){
                     return res.status(500).send({
                         message:"Error en la petición",

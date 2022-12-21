@@ -1,7 +1,3 @@
-/**
- * DATE en CUANDO SE AGREGÓ, CUANDO SE ACTUALIZÓ, CUANDO SE ALQUILÓ, CUANDO SE DEVOLVIÓ, 
- */
-
 var validator = require("validator");
 const Camioneta = require("../models/Camioneta");
 let fecha = new Date();
@@ -20,19 +16,24 @@ var controller = {
 
     save:function(req,res){
         var params = req.body;
-        var validate_name = !validator.isEmpty(params.nombre);
+        var validate_name = !validator.isEmpty(params.name);
         var validate_brand = !validator.isEmpty(params.brand);
         var validate_year = !validator.isEmpty(params.year);
         var validate_description = !validator.isEmpty(params.description);
+        var validate_status = !validator.isEmpty(params.status);
+        var validate_price = !validator.isEmpty(params.price);
+        var validate_image = !validator.isEmpty(params.image);
 
-        if(validate_name && validate_brand && validate_year && validate_description){
+        if(validate_name && validate_brand && validate_year && validate_description && validate_price && validate_status && validate_image){
 
             var camioneta = new Camioneta();
-            camioneta.name = params.nombre;
+            camioneta.name = params.name;
             camioneta.brand = params.brand;
             camioneta.year = params.year;
             camioneta.description = params.description;
             camioneta.status = params.status; 
+            camioneta.price = params.price; 
+            camioneta.image = params.image; 
             console.log(camioneta);
             
             camioneta.save((err, userStored) =>{
@@ -59,17 +60,21 @@ var controller = {
         var params = req.body;
         var idCamioneta = req.params.id;
         console.log(idCamioneta);
-        var validate_name = !validator.isEmpty(params.nombre);
+        var validate_name = !validator.isEmpty(params.name);
         var validate_brand = !validator.isEmpty(params.brand);
         var validate_year = !validator.isEmpty(params.year);
         var validate_description = !validator.isEmpty(params.description);
-        if(validate_name && validate_brand && validate_year && validate_description){
+        var validate_price = !validator.isEmpty(params.price);
+        var validate_image = !validator.isEmpty(params.image);
+        if(validate_name && validate_brand && validate_year && validate_description && validate_price && validate_image){
             
             var update = {
-                name:params.nombre,
+                name:params.name,
                 brand:params.brand,
                 year:params.year,
-                description:params.description
+                description:params.description,
+                price:params.price,
+                image:params.image
             }
 
             Camioneta.findByIdAndUpdate({_id:idCamioneta},update,{rawResult:true},(err, camionetaUpdate)=>{
@@ -169,33 +174,13 @@ var controller = {
     },
     
     alquilar:function(req,res){
+
         var camionetaId = req.params.id;
 
         var update = {
-            rentedAt:fecha,
+            rented:fecha,
             status:"Alquilada"
         };
-
-        const busqueda = async () =>{
-            let posts = await Camioneta.find({
-                status:{
-                    $eq:"Alquilada"
-                },
-                _id:{
-                    $eq:camionetaId
-                },
-                
-            })
-         console.log(posts, "FUNCION")
-         if(posts == null){
-            return "true";
-         }else return "false";
-
-            
-        };
-        console.log(busqueda, "aas");
-        
-        /*if(busqueda.post == null && busqueda.post != undefined){
 
             Camioneta.findOneAndUpdate({camionetaId},update,{new:true},(err, camionetaUpdate)=>{
                 if(err){
@@ -218,11 +203,7 @@ var controller = {
                     camionetaUpdate
                 });
             })
-        }else{
-            res.status(200).send({
-                message:"Camioneta no disponible"
-            })
-        }*/
+
 
 
         

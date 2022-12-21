@@ -7,10 +7,7 @@ var UsuarioSchema = new Schema({
     email:String,
     password:String,
     image:String,
-    role:String,
-    createdAt: {type:Date, default: Date.now},
-    updated:String,
-    timeupdated:String
+    role:String
 })
 UsuarioSchema.set("timestamps", true);
 
